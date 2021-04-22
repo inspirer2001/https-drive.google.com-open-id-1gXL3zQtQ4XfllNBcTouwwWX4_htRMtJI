@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+input[type=number], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<h2>Des Encryption(Avalanche Effect)</h2>
+<p>Here you will input the different parameter of des algorithm</p>
+
+<div class="container">
+  <form action="/net7/" method = "post">
+  	{% csrf_token %} 
+    <div class="row">
+      <div class="col-25">
+        <label for="fname">No of rounds</label>
+      </div>
+      <div class="col-75">
+        <input type="number" id="nr" name="nr" value="{{val1}}" placeholder="No of rounds.." required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="lname">Halfwidth</label>
+      </div>
+      <div class="col-75">
+        <input type="number" id="hw" name="hw" value="{{val2}}" placeholder="Halfwidth of plaintext.." required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="Plain text">Plain text</label>
+      </div>
+      <div class="col-75">
+        <textarea id="pt" name="pt" placeholder="type your palin text.." style="height:50px" required>{{val3}}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="Key">Key</label>
+      </div>
+      <div class="col-75">
+        <textarea id="key" name="key" placeholder="type your key for encryption.." style="height:50px" required>{{val4}}</textarea>
+      </div>
+    </div>
+     <p>Now change the bit of plaintext or key</p>
+     <div class="row">
+      <div class="col-25">
+        <label for="lname">Changed Plaintext</label>
+      </div>
+      <div class="col-75">
+         <textarea id="cp" name="cp" placeholder="change the  plaintext by one or two bit.." style="height:50px" required>{{val8}}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="lname">Changed Key</label>
+      </div>
+      <div class="col-75">
+        <textarea id="ck" name="ck" placeholder="change the key by one or two bit .." style="height:50px" required>{{val9}}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <input type="submit" name ="ne" value="Submit">
+    </div>
+  </form>
+</div>
+<br>
+<div>
+  <h3>your ciphertext in hexadecimal form    =>    {{val}}</h3>
+  <br>
+  <h3>your ciphertext in binary form => {{val5}}</h3>
+  <br>
+  <h3>Your round cipher text values => <br><br>{{val6}}</h3>
+  <br>
+  <h2 style="color:Red">Now new ciphertext with changed bit in key or plaintext</h2>
+  <br>
+  <h3>your new ciphertext in hexadecimal form    =>    {{val10}}</h3>
+  <br>
+  <h3>your new ciphertext in binary form => {{val11}}</h3>
+  <br>
+  <h3>your new round ciphertext in binary form => <br><br> {{val12}}</h3>
+  <br>
+  <h3 style="color:blue"> The change in bit per round is(Avalanche effect) => {{val13}}</h3>
+</div>
+  <div style="width:50%">
+  <canvas id="myChart"></canvas>
+</div>
+<script>
+  y=[]
+  for (var i=0; i < {{val1}}; i++)
+  {
+    y.push(i+1);
+  }
+  const labels = y
+  const data = {
+  labels: labels,
+  datasets: [{
+    label: 'Change in bit per round',
+    backgroundColor:'rgba(0, 200, 0, 1)',
+    borderColor: 'rgb(75, 192, 192)',
+    data: {{val13}},
+    borderWidth: 1
+  }]
+};
+ const config = {
+  type: 'line',
+  data: data,
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+};
+  var myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>
+</body>
+</html>
