@@ -1,13 +1,35 @@
+
+from typing import List, Tuple
 from binascii import hexlify, unhexlify
 from random import sample, shuffle
-from typing import List, Tuple
-
+#to get the single string of one round of ciphertext
+def merge_round_ciphertext(arr:List[List[str]])->List[str]:
+  ans=[]
+  l=""
+  for i in range(len(arr[0])):
+    for j in range(len(arr)):
+      l=l+arr[j][i]
+    ans.append(l)
+    l=""
+  return ans
+# for clculating the change in different bits of two string for avalanche effect
+def calculate_diff(arr1: List[List[str]], arr2: List[List[str]]) -> List[int]:
+   different = []
+   print(len(arr1[0]))
+   for i in range(len(arr1[0])):
+     cnt = 0
+     for j in range(len(arr1)):
+       for (a,b) in zip(arr1[j][i], arr2[j][i]):
+         if(a != b):
+           cnt += 1
+     different.append(cnt)
+   return different
 def permutation(s:str,arr:List[int],n: int) ->str:
-	ans = ""
-	for i in range(n):
-		ans+=s[arr[i]-1]
-	return ans
-
+  ans = ""
+  for i in range(n):
+    ans+=s[arr[i]-1]
+  return ans
+# for getting xor of two strings.
 def XOR(x: str, y: str) -> str:
     ans = ""
     for i in range(len(x)):
@@ -47,7 +69,7 @@ def shift_towards_left(x: str, shift_by: int) -> str:
 def text_hex(txt: str) -> str:
     return hexlify(txt.encode()).decode()
 
-
+#hexadecimal to text format
 def hex_text(txt: str) -> str:
     return unhexlify(txt.encode()).decode()
 
@@ -60,41 +82,6 @@ def hex_bin(txt: str) -> str:
 
 def bin_hex(txt: str) -> str:
       return hex(int(txt,2))[2:]
-
-def calculate_diff_keys(arr1:List[str],arr2:List[str])->List[int]:
-  ans = []
-  for i in range(len(arr1)):
-    k = 0
-    for j in range(len(arr1[i])):
-      if(arr1[i][j]!=arr2[i][j]):
-        k = k+1
-    ans.append(k)
-
-  return ans
-
-
-def merge_round_ciphertext(arr:List[List[str]])->List[str]:
-  ans=[]
-  l=""
-  for i in range(len(arr[0])):
-    for j in range(len(arr)):
-      l=l+arr[j][i]
-    ans.append(l)
-    l=""
-  return ans
-
-def calculate_diff(arr1: List[List[str]], arr2: List[List[str]]) -> List[int]:
-   different = []
-   print(len(arr1[0]))
-   for i in range(len(arr1[0])):
-     cnt = 0
-     for j in range(len(arr1)):
-       for (a,b) in zip(arr1[j][i], arr2[j][i]):
-         if(a != b):
-           cnt += 1
-     different.append(cnt)
-   return different
-
 def PC_1_generator(size: int) -> List[int]:
    ans = [x for x in range(1,size+1) if x%8 != 0]
    shuffle(ans)
@@ -108,7 +95,7 @@ def PC_2_generator(size: int, n: int) -> List[int]:
             arr.append(i+1)
     shuffle(arr)
     return arr
-
+#initial permutation for plaintext.
 def initial_permutation_generator(size: int) -> List[int]:
     a = [x for x in range(1,size+1)]
     shuffle(a)
@@ -160,7 +147,7 @@ def key_preprocessor(key: str, halfwidth:int =32) -> str:
     key = key.zfill(2*halfwidth)
     return key
 
-
+#to generate 16 round key.
 def round_keys_generator(key: str, rounds: int =16, half_width: int =32) -> Tuple[List[str], List[str]]:
     shift_by_table = [ 1, 1, 2, 2, 
                    2, 2, 2, 2, 
